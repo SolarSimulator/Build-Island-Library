@@ -180,7 +180,7 @@ local function propertyValueToString(v)
 	end
 end
 
-local function saveBlockProperties(block, ogBlock)
+local function saveBlockProperties(block, ogBlock, i: number)
 	local props = {}
 	local part = block.PrimaryPart or block:FindFirstChildWhichIsA('BasePart')
 	local ogPart = ogBlock.PrimaryPart or ogBlock:FindFirstChildWhichIsA('BasePart')
@@ -214,6 +214,7 @@ local function saveBlockProperties(block, ogBlock)
 	end
 	return nil
 end
+
 
 function Save()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/SolarSimulator/Build-Island-Library/refs/heads/main/main.lua'))()
@@ -259,7 +260,7 @@ function Save()
 				end
 			end
 			
-			local paintLine = saveBlockProperties(block, ogBlock)
+			local paintLine = saveBlockProperties(block, ogBlock, i)
 			if paintLine then
 				write(paintLine)
 			end
