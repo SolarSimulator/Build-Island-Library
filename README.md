@@ -13,10 +13,12 @@ GetRank(Player: Player)
 ```
 Returns the rank of a player. Player defaults to LocalPlayer.
 
+
 ```lua
 GetBuildingArea(Player: Player)
 ```
 Returns the BuildingArea belonging to a player (CAN RETURN NIL). Player defaults to LocalPlayer.
+
 
 ```lua
 Stamp(Block: string/number, Position: CFrame/Vector3, Size: Vector3): Model
@@ -25,8 +27,9 @@ Stamp(Block: string/number, Position: CFrame/Vector3, Size: Vector3): Model
 - Block: Can either be a block's name or a block's AssetId
 - Position: The CFrame the block will be placed at. If it's a Vector3, it will turn it into a CFrame.
 - Size: The size of the block
+- 
 
 ```lua
 Save()
 ```
-- Sets all your blocks information as Stamp(), Paint(), and Config() functions to your clipboard. This does not save wiring.
+Sets all your blocks information as Stamp(), Paint(), and Config() functions to your clipboard. This does not save wiring.
