@@ -164,6 +164,57 @@ function tostring2(arg)
 	end
 end
 
+local function propertyValueToString(v)
+	if typeof(v) == 'Vector3' then
+		return 'Vector3.new('..tostring2(v)..')'
+	elseif typeof(v) == 'CFrame' then
+		return 'CFrame.new('..tostring2(v)..')'
+	elseif typeof(v) == 'Color3' then
+		return 'Color3.new('..v.R..','..v.G..','..v.B..')'
+	elseif typeof(v) == 'BrickColor' then
+		return 'BrickColor.new(\''..v.Name..'\')'
+	elseif typeof(v) == 'string' then
+		return '\''..v..'\''
+	else
+		return tostring(v)
+	end
+end
+
+local function saveBlockProperties(block, ogBlock)
+	local props = {}
+	local part = block.PrimaryPart or block:FindFirstChildWhichIsA('BasePart')
+	local ogPart = ogBlock.PrimaryPart or ogBlock:FindFirstChildWhichIsA('BasePart')
+	if not part or not ogPart then return nil end
+
+	if part.Transparency ~= ogPart.Transparency then
+		props.Transparency = part.Transparency
+	end
+	if part.Material ~= ogPart.Material then
+		props.Material = part.Material
+	end
+	if part.Reflectance ~= ogPart.Reflectance then
+		props.Reflectance = part.Reflectance
+	end
+	if part.Color ~= ogPart.Color then
+		props.Color = part.Color
+	end
+	if part.CanCollide ~= ogPart.CanCollide then
+		props.CanCollide = part.CanCollide
+	end
+	if part.Anchored ~= ogPart.Anchored then
+		props.Anchored = part.Anchored
+	end
+
+	if next(props) then
+		local paintProps = {}
+		for k,v in pairs(props) do
+			paintProps[#paintProps+1] = k..' = '..propertyValueToString(v)
+		end
+		return 'Paint(a'..i..', {'..table.concat(paintProps, ', ')..'})'
+	end
+	return nil
+end
+
 function Save()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/SolarSimulator/Build-Island-Library/refs/heads/main/main.lua'))()
 
@@ -173,22 +224,6 @@ function Save()
 
 	local function write(...)
 		code = table.concat({code, ...}, '') .. '\n'
-	end
-
-	local function propertyValueToString(v)
-		if typeof(v) == 'Vector3' then
-			return 'Vector3.new('..tostring2(v)..')'
-		elseif typeof(v) == 'CFrame' then
-			return 'CFrame.new('..tostring2(v)..')'
-		elseif typeof(v) == 'Color3' then
-			return 'Color3.new('..v.R..','..v.G..','..v.B..')'
-		elseif typeof(v) == 'BrickColor' then
-			return 'BrickColor.new(\''..v.Name..'\')'
-		elseif typeof(v) == 'string' then
-			return '\''..v..'\''
-		else
-			return tostring(v)
-		end
 	end
 
 	for i, block in ipairs(PlayerArea:GetChildren()) do
@@ -218,22 +253,17 @@ function Save()
 					if config:IsA('ValueBase') then
 						local og = ogConfigFolder:FindFirstChild(config.Name)
 						if og and og.Value ~= config.Value then
-							write('Configure(a'..i..', \''..config.Name..'\', ' .. propertyValueToString(config.Value)..')')
+							write('Configure(a'..i..', \'' .. config.Name..'\', ' .. propertyValueToString(config.Value)..')')
 						end
 					end
 				end
 			end
 			
-			if block:FindFirstChild('Paint') then
-				local props = block.Paint
-				local paintProps = {}
-				for name, value in pairs(props) do
-					paintProps[#paintProps+1] = name..' = ' .. propertyValueToString(value)
-				end
-				if #paintProps > 0 then
-					write('Paint(a'..i..', {', table.concat(paintProps, ', '), '})')
-				end
+			local paintLine = saveBlockProperties(block, ogBlock)
+			if paintLine then
+				write(paintLine)
 			end
+
 		end
 	end
 
