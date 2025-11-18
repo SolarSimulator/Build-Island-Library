@@ -130,12 +130,23 @@ function Wire(OutputInfo: {Block: Model, OutputName: string}, InputInfo: {Block:
 	end
 end
 
-function Paint(Block: Model, Properties: {[string]: any})
+function Paint(Block, Properties)
 	if Block and Properties then
-		local primary = Block.PrimaryPart or Block:FindFirstChildWhichIsA('BasePart')
-		BuildingBridge.Paint:InvokeServer({primary}, Properties)
+		local primary = Block.PrimaryPart or Block:FindFirstChildWhichIsA("BasePart")
+
+		if primary then
+			if Properties.Material and Properties.MaterialVariant == nil then
+				local currentVariant = primary.MaterialVariant
+				if currentVariant ~= "" and currentVariant ~= nil then
+					Properties.MaterialVariant = currentVariant
+				end
+			end
+
+			BuildingBridge.Paint:InvokeServer({primary}, Properties)
+		end
 	end
 end
+
 
 
 --Yes, clean() and tostring2() was made with chatgpt sorry not sorry
