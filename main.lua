@@ -270,38 +270,3 @@ function Save()
 	setclipboard(code)
 	print(code)
 end
-
---# Aliases
---Stamp
-s = Stamp
-stamp = Stamp
-build = Stamp
-Place = Stamp
-Build = Stamp
-Place = Stamp
-
---Delete
-d = Delete
-delete = Delete
-del = Delete
-Del = Delete
-Remove = Delete
-
---Configure
-c = Configure
-configure = Configure
-config = Configure
-Config = Configure
-Configuration = Configure
-
---Wire
-w = Wire
-wire = Wire
-wiring = Wire
-Wiring = Wire
-
---Paint
-p = Paint
-paint = Paint
-Painting = Paint
-painting = Paint
